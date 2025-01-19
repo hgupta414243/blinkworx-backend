@@ -1,17 +1,17 @@
 const express = require("express");
 const { Pool } = require("pg");
 const cors = require("cors");
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "ecommerce",
-  port: 5432,
+  connectionString: process.env.POSTGRES_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
-
 app.use(cors());
 app.use(express.json());
 
@@ -54,10 +54,10 @@ insertInitialData();
 app.get("/api/products", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM PRODUCTS");
-    res.json(result.rows);
+    return res.json(result.rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -78,10 +78,10 @@ app.get("/api/order", async (req, res) => {
         };
       }
     });
-    res.json(resData);
+    return res.json(resData);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -106,16 +106,14 @@ app.get("/api/order/:id", async (req, res) => {
       }
     });
 
-    console.log('resData',resData);
-    
     if (result.rows.length === 0) {
-      res.status(404).json({ error: "Order not found" });
+      return res.status(404).json({ error: "Order not found" });
     } else {
-      res.json(result.rows[0]);
+      return res.json(result.rows[0]);
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -138,11 +136,12 @@ app.post("/api/orders", async (req, res) => {
     }
 
     await pool.query("COMMIT");
-    res.status(201).json({ message: "Order created successfully", orderId });
+    return res
+      .status(201)
+      .json({ message: "Order created successfully", orderId });
   } catch (err) {
     await pool.query("ROLLBACK");
-    console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -166,11 +165,10 @@ app.put("/api/orders/:id", async (req, res) => {
     }
 
     await pool.query("COMMIT");
-    res.json({ message: "Order updated successfully" });
+    return res.json({ message: "Order updated successfully" });
   } catch (err) {
     await pool.query("ROLLBACK");
-    console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -183,14 +181,21 @@ app.delete("/api/orders/:id", async (req, res) => {
     await pool.query("COMMIT");
 
     if (result.rowCount === 0) {
-      res.status(404).json({ error: "Order not found" });
+      return res.status(404).json({ error: "Order not found" });
     } else {
-      res.json({ message: "Order deleted successfully" });
+      return res.json({ message: "Order deleted successfully" });
     }
   } catch (err) {
     await pool.query("ROLLBACK");
-    console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/", async (req, res) => {
+  try {
+    return res.json({ message: "Server is running" });
+  } catch (err) {
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
