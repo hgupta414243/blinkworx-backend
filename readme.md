@@ -43,7 +43,7 @@ Here is a basic overview of the project structure:
 ```
 project-root/
 ├── src/           # Application source code
-│   ├── app.js        # Entry point for the app
+│   ├── index.js        # Entry point for the app
 ├── package.json   # Project configuration and dependencies
 └── README.md      # Project documentation
 ```
