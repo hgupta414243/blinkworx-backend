@@ -69,9 +69,3 @@ If you encounter issues while running the application:
    node -v
    npm -v
    ```
-
-4. **Search for Errors**: Review the error message in the terminal or application logs for clues.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
