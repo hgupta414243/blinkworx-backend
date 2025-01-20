@@ -1,8 +1,0 @@
-[build]
-  command = "npm install"  # Install dependencies
-  publish = "src"         # Replace with the folder for frontend files if you have one
-
-[[redirects]]
-  from = "/api/*"
-  to = "/api/:splat"
-  status = 200
