@@ -24,7 +24,7 @@ npm install
 npm start
 ```
 
-This command will start the application. By default, it may run on [http://localhost:3000](http://localhost:3000) or another port specified in the application.
+This command will start the application. By default, it may run on [https://blinkworx-backend.onrender.com](https://blinkworx-backend.onrender.com) or another port specified in the application.
 
 ### 5. Build the Application for Production
 
